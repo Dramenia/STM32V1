@@ -221,12 +221,6 @@ void SystemInit(void)
 
 }
 
-void _exit(int status) {
-    while (1) {
-        ;
-    }
-}
-
 /**
    * @brief  Update SystemCoreClock variable according to Clock Register Values.
   *         The SystemCoreClock variable contains the core clock (HCLK), it can

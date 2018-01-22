@@ -96,14 +96,24 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
-
+	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
   /* USER CODE END WHILE */
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_9);
-		HAL_Delay(100);
+		for(int i=0; i< 2048; i++){
+			HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (i*2)+1);
+			//HAL_DAC_Stop(&hdac1, DAC_CHANNEL_1);
+		}
+		for(int i=2048; i > 0; i--){
+			HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, (i*2)+1);
+			//HAL_DAC_Stop(&hdac1, DAC_CHANNEL_1);
+		}
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_8);
+		//HAL_DACEx_TriangleWaveGenerate(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R);
   /* USER CODE BEGIN 3 */
 
   }
@@ -139,7 +149,7 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
@@ -174,7 +184,7 @@ static void MX_DAC1_Init(void)
 
     /**DAC channel OUT1 config 
     */
-  sConfig.DAC_Trigger = DAC_TRIGGER_SOFTWARE;
+  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
   sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
   if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK)
   {
